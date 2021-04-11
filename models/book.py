@@ -15,7 +15,7 @@ class Book(database, SerializerMixin):
     date_added = sqlalchemy.Column(sqlalchemy.DateTime, nullable=False, default=datetime.now)
     cover = sqlalchemy.Column(sqlalchemy.String, nullable=False, default="/static/img/no_cover.jpg")
     data_folder = sqlalchemy.Column(sqlalchemy.String, nullable=False)
-    uploads_count = sqlalchemy.Column(sqlalchemy.Integer, nullable=False, default=0)
+    downloads_count = sqlalchemy.Column(sqlalchemy.Integer, nullable=False, default=0)
     downloaded_by = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("users.id"))
     genre = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("genres.id"))
     reviews = sqlalchemy.orm.relationship("Review", backref="books")
