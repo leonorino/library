@@ -5,7 +5,7 @@ from sqlalchemy_serializer import SerializerMixin
 from ..db_manager import database
 
 
-class Book(database):
+class Book(database, SerializerMixin):
     __tablename__ = "books"
     id = sqlalchemy.Column(sqlalchemy.Integer, primery_key=True, autoincrement=True, nullable=False)
     name = sqlalchemy.Column(sqlalchemy.String, nullable=False, unique=True)
