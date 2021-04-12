@@ -6,6 +6,9 @@ from sqlalchemy_serializer import SerializerMixin
 
 class Genre(database, SerializerMixin):
     __tablename__ = "genres"
-    id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True, nullable=False)
+
+    id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True,
+                           autoincrement=True, nullable=False)
     name = sqlalchemy.Column(sqlalchemy.String, unique=True, nullable=False)
-    books = sqlalchemy.orm.relationship('Book', backref='genres')
+
+    books = orm.relationship("Book", back_populates="genre")

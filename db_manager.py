@@ -26,7 +26,7 @@ def db_init(db_file=DB_PATH):
     engine = sa.create_engine(conn_str, echo=False)
     __factory = orm.sessionmaker(bind=engine)
 
-    from .models import __all_models
+    from models import __all_models
 
     database.metadata.create_all(engine)
 
