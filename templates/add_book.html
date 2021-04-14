@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <form method="post" enctype="multipart/form-data"
+            class="mx-auto my-3 w-50" id="content">
+        {{form.hidden_tag()}}
+
+        <h3 align="center">Добавление книги</h3>
+
+        <div class="form-group">
+        {{form.title.label}}</br>
+        {{form.title(class="form-control")}}
+        {% for error in form.title.errors %}
+            <div class="alert alert-warning">
+            {{error}}
+            </div>
+        {% endfor %}
+        </div>
+
+        <div class="form-group">
+        {{form.description.label}}</br>
+        {{form.description(class="form-control")}}
+        {% for error in form.description.errors %}
+            <div class="alert alert-warning">
+            {{error}}
+            </div>
+        {% endfor %}
+        </div>
+
+        <div class="form-group">
+        {{form.author.label}}</br>
+        {{form.author(class="form-control")}}
+        {% for error in form.author.errors %}
+            <div class="alert alert-warning">
+            {{error}}
+            </div>
+        {% endfor %}
+        </div>
+
+        <div class="form-group">
+        {{form.genre.label}}</br>
+        {{form.genre(class="form-control")}}
+        {% for error in form.genre.errors %}
+            <div class="alert alert-warning">
+            {{error}}
+            </div>
+        {% endfor %}
+        </div>
+
+        <div class="form-group">
+        {{form.cover.label}}</br>
+        {{form.cover(class="form-control", accept="image/*")}}
+        {% for error in form.cover.errors %}
+            <div class="alert alert-warning">
+            {{error}}
+            </div>
+        {% endfor %}
+        </div>
+
+        <div class="form-group">
+            <div class="d-flex justify-content-evenly">
+            {{form.epub_file.label}}{{form.fb2_file.label}}
+            </div>
+            <div class="d-flex justify-content-evenly">
+            {{form.epub_file(class="form-control", accept=".epub")}}
+            {{form.fb2_file(class="form-control", accept=".fb2")}}
+            </div>
+        </div>
+
+        <div class="form-group text-center mt-2">
+        {{form.submit(class="btn btn-primary")}}
+        </div>
+    </form>
+{% endblock %}
