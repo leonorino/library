@@ -22,15 +22,16 @@ def redirect_to_main():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
-    #     if form.validate_on_submit():
-    #         print("Validated")
-    #         db_sess = db_manager.create_session()
-    #         user = db_sess.query(User).filter(
-    #             User.name == form.name.data).first()
-    #         if user and user.check_password(form.password.data):
-    #             login_user(user, remember=form.remember_me.data)
-    #             return redirect("/books/add")
-    #         return render_template('login.html', message="Неверное имя или пароль", form=form)
+    if form.validate_on_submit():
+        print("Validated")
+        db_sess = db_manager.create_session()
+        user = db_sess.query(User).filter(
+            User.name == form.name.data).first()
+
+        if user and user.check_password(form.password.data):
+            login_user(user, remember=form.remember_me.data)
+            return redirect("/")
+        return render_template('login.html', message="Неверное имя или пароль", form=form)
     return render_template('login.html', title='Авторизация', form=form)
 
 
