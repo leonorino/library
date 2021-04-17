@@ -1,6 +1,12 @@
-form {
+.dash-border {
     border-style: dashed;
     border-radius: 10px;
     border-color: blue;
     padding: 1%;
+}
+
+.cover {
+    width: 250px;
+    min-height: 250px;
+    max-height: auto;
 }

@@ -1,6 +1,6 @@
 import os
 import uuid
-from flask import Flask, render_template, redirect, request
+from flask import Flask, render_template, redirect, request, url_for
 from flask_login import LoginManager, login_user, login_required, logout_user
 
 import db_manager
@@ -20,12 +20,51 @@ def redirect_to_main():
     return redirect("/books/add")
 
 
-@app.route("/books/add", methods=["GET", "POST"])
+@app.route("/books", methods=["GET", "POST"])
 def show_main_page():
+    session = db_manager.create_session()
+    if request.method == "GET":
+        books = session.query(Book).all()
+        return render_template("book_list.html", books=books,
+                               title="Список книг")
+    elif request.method == "POST":
+        return redirect(url_for("show_search_results",
+                                search_by=request.form['type'],
+                                value=request.form['search_query']))
+
+
+@app.route("/books/search/?search_by=<search_by>&value=<value>",
+           methods=["GET", "POST"])
+def show_search_results(search_by, value):
+    if request.method == "GET":
+        session = db_manager.create_session()
+
+        if search_by == "title":
+            books = session.query(Book).filter(Book.title.like(f"%{value}%")) \
+                .all()
+            return render_template("book_list.html", books=books,
+                                   title="Список книг")
+        elif search_by == "author":
+            authors = session.query(Author).filter(Author.name
+                                                   .like(f"%{value}%"))
+            all_books = list()
+            for author in authors:
+                books = session.query(Book).filter(Book.author_id ==
+                                                   author.id).all()
+                all_books += books
+
+            return render_template("book_list.html", books=books,
+                                   title="Список книг")
+    elif request.method == "POST":
+        return redirect(url_for("show_search_results",
+                                search_by=request.form['type'],
+                                value=request.form['search_query']))
+
+@app.route("/books/add", methods=["GET", "POST"])
+def show_book_add_page():
     form = AddBookForm()
 
     if form.validate_on_submit():
-        print("Validated")
         session = db_manager.create_session()
 
         new_book = Book(
@@ -66,7 +105,7 @@ def show_main_page():
         content_directory = os.path.join("static/books", new_directory_name)
 
         request.files['cover'].save(os.path.join(content_directory,
-            "cover.png").replace("\\", "/"))
+            "cover").replace("\\", "/"))
         request.files['fb2_file'].save(os.path.join(content_directory,
             "book.fb2").replace("\\", "/"))
         request.files['epub_file'].save(os.path.join(content_directory,
