@@ -9,6 +9,7 @@ from models.author import Author
 from models.genre import Genre
 from forms.add_book import AddBookForm
 from forms.login import LoginForm
+from forms.register import RegisterForm
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "secret_key"
@@ -23,7 +24,6 @@ def redirect_to_main():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        print("Validated")
         db_sess = db_manager.create_session()
         user = db_sess.query(User).filter(
             User.name == form.name.data).first()
@@ -31,8 +31,39 @@ def login():
         if user and user.check_password(form.password.data):
             login_user(user, remember=form.remember_me.data)
             return redirect("/")
-        return render_template('login.html', message="Неверное имя или пароль", form=form)
+        return render_template('login.html', title="Авторизация",
+                               message="Неверное имя или пароль", form=form)
     return render_template('login.html', title='Авторизация', form=form)
+
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    form = RegisterForm()
+    if form.validate_on_submit():
+        session = db_manager.create_session()
+
+        existing_user = session.query(User) \
+            .filter(User.name == form.name.data).first()
+
+        if existing_user:
+            return render_template("register.html", title="Регистрация",
+                                   message="Пользователь уже существует",
+                                   form=form)
+
+        if form.password.data != form.password_again.data:
+            return render_template("register.html", title="Регистрация",
+                                   message="Пароли не совпадают", form=form)
+
+
+        new_user = User()
+        new_user.name = form.name.data
+        new_user.set_password(form.password.data)
+
+        session.add(new_user)
+        session.commit()
+
+        return redirect("/")
+    return render_template("register.html", title="Регистрация", form=form)
 
 
 @app.route("/books", methods=["GET", "POST"])

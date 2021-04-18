@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import SubmitField, StringField, IntegerField, FileField
 from wtforms import SelectField
-from wtforms.validators import DataRequired, ValidationError, regexp
+from wtforms.validators import DataRequired, ValidationError
 
 from models.book import Book
 
