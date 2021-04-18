@@ -20,8 +20,6 @@ class Book(database, SerializerMixin):
                                  sqlalchemy.ForeignKey("genres.id"))
     date_added = sqlalchemy.Column(sqlalchemy.DateTime, nullable=False,
                                    default=datetime.now)
-    cover = sqlalchemy.Column(sqlalchemy.String, nullable=False,
-                              default="/static/img/no_cover.png")
     data_folder = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     downloads_count = sqlalchemy.Column(sqlalchemy.Integer, nullable=False,
                                         default=0)
