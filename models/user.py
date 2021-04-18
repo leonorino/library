@@ -3,6 +3,7 @@ from sqlalchemy import orm
 from sqlalchemy_serializer import SerializerMixin
 from db_manager import database
 from flask_login import UserMixin
+from werkzeug.security import generate_password_hash, check_password_hash
 
 user_to_book = sqlalchemy.Table(
     "user_to_book",
@@ -25,4 +26,10 @@ class User(database, UserMixin, SerializerMixin):
     reviews = orm.relationship("Review", back_populates="user")
     added_books = orm.relationship("Book", back_populates="user")
     downloaded_books = orm.relationship("Book", secondary="user_to_book",
-                                    backref="users")
+                                        backref="users")
+
+    def set_password(self, password):
+        self.hashed_password = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.hashed_password, password)

@@ -5,11 +5,10 @@ from flask_login import LoginManager, login_user, login_required, logout_user
 
 import db_manager
 from models.book import Book
-from models.user import User
 from models.author import Author
 from models.genre import Genre
 from forms.add_book import AddBookForm
-
+from forms.login import LoginForm
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "secret_key"
@@ -17,7 +16,23 @@ app.config['SECRET_KEY'] = "secret_key"
 
 @app.route("/")
 def redirect_to_main():
-    return redirect("/books/add")
+    return redirect("/books")
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        print("Validated")
+        db_sess = db_manager.create_session()
+        user = db_sess.query(User).filter(
+            User.name == form.name.data).first()
+
+        if user and user.check_password(form.password.data):
+            login_user(user, remember=form.remember_me.data)
+            return redirect("/")
+        return render_template('login.html', message="Неверное имя или пароль", form=form)
+    return render_template('login.html', title='Авторизация', form=form)
 
 
 @app.route("/books", methods=["GET", "POST"])
@@ -60,6 +75,7 @@ def show_search_results(search_by, value):
                                 search_by=request.form['type'],
                                 value=request.form['search_query']))
 
+
 @app.route("/books/add", methods=["GET", "POST"])
 def show_book_add_page():
     form = AddBookForm()
@@ -100,16 +116,16 @@ def show_book_add_page():
 
         os.mkdir(os.path.join("static/books", new_directory_name))
         new_book.data_folder = os.path.join("static/books",
-            new_directory_name).replace("\\", "/")
+                                            new_directory_name).replace("\\", "/")
 
         content_directory = os.path.join("static/books", new_directory_name)
 
-        request.files['cover'].save(os.path.join(content_directory,
-            "cover").replace("\\", "/"))
-        request.files['fb2_file'].save(os.path.join(content_directory,
-            "book.fb2").replace("\\", "/"))
-        request.files['epub_file'].save(os.path.join(content_directory,
-            "book.epub").replace("\\", "/"))
+        request.files['cover'].save(os.path.join(
+            content_directory, "cover").replace("\\", "/"))
+        request.files['fb2_file'].save(os.path.join(
+            content_directory, "book.fb2").replace("\\", "/"))
+        request.files['epub_file'].save(os.path.join(
+            content_directory, "book.epub").replace("\\", "/"))
 
         session.add(new_book)
         session.commit()
@@ -129,6 +145,5 @@ if __name__ == "__main__":
     def load_user(user_id):
         session = db_manager.create_session()
         return session.query(User).get(user_id)
-
 
     app.run(host="localhost", port=8080, debug=True)
