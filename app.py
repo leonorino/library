@@ -7,9 +7,11 @@ import db_manager
 from models.book import Book
 from models.author import Author
 from models.genre import Genre
+from models.review import Review
 from forms.add_book import AddBookForm
 from forms.login import LoginForm
 from forms.register import RegisterForm
+from forms.add_review import AddReviewForm
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "secret_key"
@@ -53,7 +55,6 @@ def register():
         if form.password.data != form.password_again.data:
             return render_template("register.html", title="Регистрация",
                                    message="Пароли не совпадают", form=form)
-
 
         new_user = User()
         new_user.name = form.name.data
@@ -105,6 +106,22 @@ def show_search_results(search_by, value):
         return redirect(url_for("show_search_results",
                                 search_by=request.form['type'],
                                 value=request.form['search_query']))
+
+
+@app.route("/books/book=<int:book_id>/reviews/add", methods=["GET", "POST"])
+def show_review_add_page(book_id):
+    # TODO: многострочное поле для отзыва в шаблоне
+    form = AddReviewForm()
+    # if form.validate_on_submit():
+    #     session = db_manager.create_session()
+    #     user = load_user()
+    #     new_review = Review(rating=form.rating.data, content=form.content.data, book_id=book_id, user_id=user.id)
+    return render_template("add_review.html", form=form)
+
+
+@app.route("/books/book=<int:book_id>/reviews", methods=["GET", "POST"])
+def show_reviews_page(book_id):
+    return redirect("/")
 
 
 @app.route("/books/add", methods=["GET", "POST"])
@@ -172,9 +189,11 @@ if __name__ == "__main__":
 
     from models.user import User
 
+
     @login_manager.user_loader
     def load_user(user_id):
         session = db_manager.create_session()
         return session.query(User).get(user_id)
+
 
     app.run(host="localhost", port=8080, debug=True)
