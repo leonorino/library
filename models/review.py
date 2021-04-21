@@ -10,11 +10,12 @@ class Review(database, SerializerMixin):
 
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True,
                            autoincrement=True, nullable=False)
+    rating = sqlalchemy.Column(sqlalchemy.Integer, nullable=False)
     content = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     book_id = sqlalchemy.Column(sqlalchemy.Integer,
                                 sqlalchemy.ForeignKey("books.id"))
     user_id = sqlalchemy.Column(sqlalchemy.Integer,
-                             sqlalchemy.ForeignKey("users.id"))
+                                sqlalchemy.ForeignKey("users.id"))
     date_added = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.now,
                                    nullable=False)
 
