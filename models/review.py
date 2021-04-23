@@ -19,3 +19,4 @@ class Review(database, SerializerMixin):
                                    nullable=False)
 
     user = orm.relationship("User")
+    book = orm.relationship("Book")

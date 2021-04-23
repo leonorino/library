@@ -1,6 +1,6 @@
 import os
 import uuid
-from flask import Flask, render_template, redirect, request, url_for
+from flask import Flask, render_template, redirect, request, url_for, send_file
 from flask_login import LoginManager, login_user, login_required, logout_user
 
 import db_manager
@@ -34,6 +34,12 @@ def login():
         return render_template('login.html', title="Авторизация",
                                message="Неверное имя или пароль", form=form)
     return render_template('login.html', title='Авторизация', form=form)
+
+
+@app.route("/logout")
+def logout():
+    logout_user()
+    return redirect("/")
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -99,7 +105,7 @@ def show_search_results(search_by, value):
                                                    author.id).all()
                 all_books += books
 
-            return render_template("book_list.html", books=books,
+            return render_template("book_list.html", books=all_books,
                                    title="Список книг")
     elif request.method == "POST":
         return redirect(url_for("show_search_results",
@@ -161,7 +167,28 @@ def show_book_add_page():
         session.add(new_book)
         session.commit()
 
+        return redirect("/")
+
     return render_template("add_book.html", title="Добавление книги", form=form)
+
+
+@app.route("/books/<int:book_id>/get/<format>")
+def send_book(book_id, format):
+    session = db_manager.create_session()
+    book = session.query(Book).get(book_id)
+    data_folder = book.data_folder
+    book.downloads_count += 1
+    session.add(book)
+    session.commit()
+    return send_file(f"{data_folder}/book.{format}",
+                     attachment_filename=f"book.{format}", as_attachment=True)
+
+
+@app.route("/books/<int:book_id>/reviews")
+def show_reviews(book_id):
+    session = db_manager.create_session()
+    book = session.query(Book).get(book_id)
+    return render_template("review_list.html", book=book)
 
 
 if __name__ == "__main__":

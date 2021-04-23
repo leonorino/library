@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2 align="center">Список отзывов</h2>
+    <div class="mb-1" style="text-align: center">
+        <a class="btn btn-success" href="/books/{{book.id}}/reviews/add">Добавить отзыв</a>
+    </div>
+    <div class="list-group">
+        {% for review in book.reviews %}
+            <div class="list-group-item d-flex flex-row justify-content-start">
+                <h3>Отзыв пользователя <strong>{{review.user.name}}</strong> от <strong>{{review.date_added}}</strong></h3>
+                <p>{{review.content}}</p>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

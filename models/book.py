@@ -24,6 +24,7 @@ class Book(database, SerializerMixin):
     downloads_count = sqlalchemy.Column(sqlalchemy.Integer, nullable=False,
                                         default=0)
 
+    reviews = orm.relationship("Review", back_populates="book")
     author = orm.relationship("Author")
     user = orm.relationship("User")
     genre = orm.relationship("Genre")
