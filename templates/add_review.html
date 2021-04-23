@@ -1,9 +1,9 @@
 {%extends "base.html" %}
 
 {% block content %}
-<form method="post" enctype="multipart/form-data" class="dash-border mx-auto my-3 w-50" id="content">
+<form method="post" class="dash-border mx-auto my-3 w-50" id="content">
     {{form.hidden_tag()}}
-    <h3 align="center">Добавление отзыва о книге </h3>
+    <h3 align="center">Добавление отзыва о книге "{{book.title}}"</h3>
     <div class="form-group">
         {{form.rating.label}}</br>
         {{form.rating(class="form-control", type="text", placeholder="Введите оценку от 1 до 10")}}

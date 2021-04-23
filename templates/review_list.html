@@ -2,15 +2,23 @@
 
 {% block content %}
     <h2 align="center">Список отзывов</h2>
+    {% if current_user.is_authenticated %}
     <div class="mb-1" style="text-align: center">
-        <a class="btn btn-success" href="/books/{{book.id}}/reviews/add">Добавить отзыв</a>
+        <a class="btn btn-success" href="/books/id={{book.id}}/reviews/add">Добавить отзыв</a>
     </div>
+    {% else %}
+    <p class="mb-1" align="center">Авторизуйтесь, чтобы добавить отзыв</p>
+    {% endif %}
     <div class="list-group">
         {% for review in book.reviews %}
-            <div class="list-group-item d-flex flex-row justify-content-start">
-                <h3>Отзыв пользователя <strong>{{review.user.name}}</strong> от <strong>{{review.date_added}}</strong></h3>
+            <div class="list-group-item">
+                <p>Отзыв пользователя <strong>{{review.user.name}}</strong> от <strong>{{review.date_added.strftime("%d.%m.%Y в %H:%M")}}</strong></p>
                 <p>{{review.content}}</p>
             </div>
         {% endfor %}
+
+        {% if not book.reviews %}
+            <h4 align="center">Отзывов нет</h4>
+        {% endif %}
     </div>
 {% endblock %}

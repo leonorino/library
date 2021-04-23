@@ -16,6 +16,7 @@
             rel="stylesheet"
             type="text/css"
         />
+        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
         {% block links %}{% endblock %}
     </head>
     <body>
@@ -25,7 +26,6 @@
                 {% if current_user.is_authenticated %}
                     <p>Пользователь: {{current_user.name}}</p>
                     <a class="btn btn-info" href="/logout">Выйти</a>
-                    <!-- <p>Профилей пока нет :)</p> -->
                 {% else %}
                     <div>
                         <a class="btn btn-primary" href="/register">Зарегистрироваться</a>

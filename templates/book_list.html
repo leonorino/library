@@ -12,9 +12,13 @@
             <button class="btn btn-primary" type="submit">Поиск</button>
         </form>
     </div>
+    {% if current_user.is_authenticated %}
     <div class="mb-1" style="text-align: center">
         <a class="btn btn-success" href="/books/add">Добавить книгу</a>
     </div>
+    {% else %}
+    <p class="mb-1" align="center">Авторизуйтесь, чтобы добавить книгу</p>
+    {% endif %}
     <div class="list-group">
         {% for book in books %}
             <div class="list-group-item d-flex flex-row justify-content-start">
@@ -24,13 +28,11 @@
                     <p><strong>Описание:</strong> {{book.description}}</p>
                     <p><strong>Автор:</strong> {{book.author.name}}</p>
                     <p><strong>Жанр:</strong> {{book.genre.name}}</p>
-                    <p>Книга добавлена пользователем <strong>{{book.user.name}}</strong> {{book.date_added}}</p>
+                    <p>Книга добавлена пользователем <strong>{{book.user.name}}</strong> {{book.date_added.strftime("%d.%m.%Y в %H:%M")}}</p>
                     <p><strong>Количество загрузок:</strong> {{book.downloads_count}}</p>
-                    <div class="d-flex flex-row justify-content-evenly" style="max-width: 50%">
-                        <a class="btn btn-primary" href="/books/{{book.id}}/get/epub">Скачать EPUB</a>
-                        <a class="btn btn-primary" href="/books/{{book.id}}/get/fb2">Скачать FB2</a>
-                        <a class="btn btn-primary" href="/books/{{book.id}}/reviews">Отзывы пользователей</a>
-                    </div>
+                    <a class="btn btn-primary me-1" href="/books/id={{book.id}}/get/epub">Скачать EPUB</a>
+                    <a class="btn btn-primary mx-1" href="/books/id={{book.id}}/get/fb2">Скачать FB2</a>
+                    <a class="btn btn-primary ms-1" href="/books/id={{book.id}}/reviews">Отзывы пользователей</a>
                 </div>
             </div>
         {% endfor %}

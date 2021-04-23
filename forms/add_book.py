@@ -10,7 +10,8 @@ def validate_book_name(form, book_title):
     import db_manager
     session = db_manager.create_session()
 
-    book = session.query(Book).filter(Book.title == book_title.data.strip()).first()
+    book = session.query(Book).filter(Book.title == book_title.data.strip()) \
+        .first()
 
     if book:
         raise ValidationError("Книга с таким названием уже существует")

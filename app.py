@@ -2,6 +2,7 @@ import os
 import uuid
 from flask import Flask, render_template, redirect, request, url_for, send_file
 from flask_login import LoginManager, login_user, login_required, logout_user
+from flask_login import current_user
 
 import db_manager
 from models.book import Book
@@ -78,6 +79,7 @@ def show_main_page():
     session = db_manager.create_session()
     if request.method == "GET":
         books = session.query(Book).all()
+        print(type(books[0].reviews[0].date_added))
         return render_template("book_list.html", books=books,
                                title="Список книг")
     elif request.method == "POST":
@@ -114,22 +116,31 @@ def show_search_results(search_by, value):
                                 value=request.form['search_query']))
 
 
-@app.route("/books/book=<int:book_id>/reviews/add", methods=["GET", "POST"])
+@app.route("/books/id=<int:book_id>/reviews/add", methods=["GET", "POST"])
 def show_review_add_page(book_id):
-    # TODO: многострочное поле для отзыва в шаблоне
+    session = db_manager.create_session()
+    book = session.query(Book).get(book_id)
+
     form = AddReviewForm()
-    # if form.validate_on_submit():
-    #     session = db_manager.create_session()
-    #     user = load_user()
-    #     new_review = Review(rating=form.rating.data, content=form.content.data, book_id=book_id, user_id=user.id)
-    return render_template("add_review.html", form=form)
+    if form.validate_on_submit():
+        user = current_user
+        new_review = Review(rating=form.rating.data, content=form.content.data,
+                            book_id=book_id, user_id=user.id)
+        session.add(new_review)
+        session.commit()
+        return redirect(f"/books/id={book_id}/reviews")
+    return render_template("add_review.html", form=form, book=book)
 
 
-@app.route("/books/book=<int:book_id>/reviews", methods=["GET", "POST"])
+@app.route("/books/id=<int:book_id>/reviews", methods=["GET", "POST"])
 def show_reviews_page(book_id):
-    return redirect("/")
+    session = db_manager.create_session()
+    book = session.query(Book).get(book_id)
 
+    reviews = book.reviews
+    return render_template("review_list.html", book=book)
 
+@login_required
 @app.route("/books/add", methods=["GET", "POST"])
 def show_book_add_page():
     form = AddBookForm()
@@ -189,7 +200,7 @@ def show_book_add_page():
     return render_template("add_book.html", title="Добавление книги", form=form)
 
 
-@app.route("/books/<int:book_id>/get/<format>")
+@app.route("/books/id=<int:book_id>/get/<format>")
 def send_book(book_id, format):
     session = db_manager.create_session()
     book = session.query(Book).get(book_id)
@@ -201,10 +212,11 @@ def send_book(book_id, format):
                      attachment_filename=f"book.{format}", as_attachment=True)
 
 
-@app.route("/books/<int:book_id>/reviews")
+@app.route("/books/id=<int:book_id>/reviews")
 def show_reviews(book_id):
     session = db_manager.create_session()
     book = session.query(Book).get(book_id)
+    print(type(book.reviews[0].date_added))
     return render_template("review_list.html", book=book)
 
 
