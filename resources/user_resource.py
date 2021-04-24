@@ -10,7 +10,14 @@ def abort_if_user_not_found(user_id):
     session = create_session()
     user = session.query(User).get(user_id)
     if not user:
-        abort(404, message=f"User {user_id} not found")
+        abort(404, message=f"Пользователь с id {user_id} не найден")
+
+
+def abort_if_user_exists(name):
+    session = create_session()
+    user = session.query(User).filter(User.name == name).first()
+    if user:
+        abort(404, message="Пользователь с таким именем уже существует")
 
 
 class UserResource(Resource):
@@ -29,10 +36,11 @@ class UserListResource(Resource):
         session = create_session()
         users = session.query(User).all()
         return jsonify({'users': [user.to_dict(
-            only=('name', )) for user in users]})
+            only=('name',)) for user in users]})
 
     def post(self):
         args = user_parser.parse_args()
+        abort_if_user_exists(args['name'])
         session = create_session()
         user = User(
             name=args['name'],
