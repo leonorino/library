@@ -28,7 +28,7 @@ class UserResource(Resource):
         user_dict = user.to_dict(only=('name',))
         user_dict["added_books"] = [book.title for book in user.added_books]
 
-        return jsonify({'users': user_dict})
+        return jsonify({'user': user_dict})
 
 
 class UserListResource(Resource):
