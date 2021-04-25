@@ -13,9 +13,11 @@ from forms.add_book import AddBookForm
 from forms.login import LoginForm
 from forms.register import RegisterForm
 from forms.add_review import AddReviewForm
+from flask_restful import Api
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "secret_key"
+app.config['JSON_AS_ASCII'] = False
 
 
 @app.route("/")
@@ -234,5 +236,11 @@ if __name__ == "__main__":
         session = db_manager.create_session()
         return session.query(User).get(user_id)
 
+
+    api = Api(app)
+    from resources.user_resource import UserResource, UserListResource
+
+    api.add_resource(UserResource, '/api/users/<int:user_id>')
+    api.add_resource(UserListResource, '/api/users')
 
     app.run(host="localhost", port=8080, debug=True)
