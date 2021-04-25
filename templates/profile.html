@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+<p>Пользователь <strong>{{user.name}}</strong></p>
+{% set books = [user.added_books, user.downloaded_books] %}
+{% for book_list in books %}
+{% if book_list == user.added_books %}
+<p>Добавленные книги</p>
+{% else %}
+<p>Скачанные книги</p>
+{%endif%}
+{% for book in book_list%}
+<div class="list-group-item d-flex flex-row justify-content-start">
+    <div class="me-1"><img class="cover" src="{{'/' + book.data_folder + '/cover'}}" alt="обложка"/></div>
+    <div>
+        <h5>{{book.title}}</h5>
+        <p><strong>Описание:</strong> {{book.description}}</p>
+        <p><strong>Автор:</strong> {{book.author.name}}</p>
+        <p><strong>Жанр:</strong> {{book.genre.name}}</p>
+        <p>Книга добавлена (дата)</p>
+        <p><strong>Количество загрузок:</strong> {{book.downloads_count}}</p>
+        <a class="btn btn-primary me-1" href="/books/id={{book.id}}/get/epub">Скачать EPUB</a>
+        <a class="btn btn-primary mx-1" href="/books/id={{book.id}}/get/fb2">Скачать FB2</a>
+        <a class="btn btn-primary ms-1" href="/books/id={{book.id}}/reviews">Отзывы пользователей</a>
+    </div>
+</div>
+{% endfor %}
+{% endfor %}
+{% endblock %}

@@ -142,6 +142,7 @@ def show_reviews_page(book_id):
     reviews = book.reviews
     return render_template("review_list.html", book=book)
 
+
 @login_required
 @app.route("/books/add", methods=["GET", "POST"])
 def show_book_add_page():
@@ -220,6 +221,12 @@ def show_reviews(book_id):
     book = session.query(Book).get(book_id)
     print(type(book.reviews[0].date_added))
     return render_template("review_list.html", book=book)
+
+
+@app.route("/users/id=<int:user_id>")
+def show_user_profile(user_id):
+    user = load_user(user_id)
+    return render_template("profile.html", user=user)
 
 
 if __name__ == "__main__":
