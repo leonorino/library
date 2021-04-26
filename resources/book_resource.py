@@ -8,7 +8,7 @@ def abort_if_book_not_found(book_id):
     session = create_session()
     book = session.query(Book).get(book_id)
     if not book:
-        abort(404, message=f"Книга с id {user_id} не существует")
+        abort(404, message=f"Книга с id {book_id} не существует")
 
 
 class BookResource(Resource):
