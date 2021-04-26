@@ -18,3 +18,13 @@ class GenreResource(Resource):
         genre = session.query(Genre).get(genre_id)
         genre_dict = genre.to_dict(rules=("-books",))
         return jsonify({'genre': genre_dict})
+
+
+class GenreListResource(Resource):
+    def get(self):
+        session = create_session()
+        genres = session.query(Genre).all()
+        return jsonify({
+            'genres': [genre.to_dict(rules=("-books",))
+                       for genre in genres]
+        })

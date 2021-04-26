@@ -18,3 +18,13 @@ class AuthorResource(Resource):
         author = session.query(Author).get(author_id)
         author_dict = author.to_dict(rules=("-books",))
         return jsonify({'author': author_dict})
+
+
+class AuthorListResource(Resource):
+    def get(self):
+        session = create_session()
+        authors = session.query(Author).all()
+        return jsonify({
+            'authors': [author.to_dict(rules=("-books",))
+                        for author in authors]
+        })

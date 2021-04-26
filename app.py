@@ -248,13 +248,16 @@ if __name__ == "__main__":
     from resources.user_resource import UserResource, UserListResource
     from resources.book_resource import BookResource, BookListResource
     from resources.genre_resource import GenreResource
+    from resources.genre_resource import GenreListResource
     from resources.author_resource import AuthorResource
+    from resources.author_resource import AuthorListResource
 
     api.add_resource(UserResource, '/api/users/<int:user_id>')
     api.add_resource(UserListResource, '/api/users')
     api.add_resource(BookResource, "/api/books/<int:book_id>")
     api.add_resource(BookListResource, "/api/books")
     api.add_resource(GenreResource, "/api/genres/<int:genre_id>")
+    api.add_resource(GenreListResource, "/api/genres")
     api.add_resource(AuthorResource, "/api/authors/<int:author_id>")
-
+    api.add_resource(AuthorListResource, "/api/authors")
     app.run(host="localhost", port=8080, debug=True)
