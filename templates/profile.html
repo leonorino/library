@@ -2,7 +2,7 @@
 
 {% block content %}
 {% if current_user.is_authenticated %}
-<div class="p-2 mt-2 bg-primary d-flex justify-content-start rounded text-white stats">
+<div class="p-2 mt-2 bg-secondary d-flex justify-content-start rounded text-white stats">
     <div>
         <img src="/static/user.png" class="rounded" width="155">
     </div>
@@ -24,7 +24,7 @@
 </div>
 {% set books = [user.added_books, user.downloaded_books] %}
 {% for book_list in books %}
-{% if book_list == user.added_books %}
+{% if loop.index == 1 %}
 <p>Добавленные книги</p>
 {% else %}
 <p>Скачанные книги</p>

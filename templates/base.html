@@ -23,12 +23,12 @@
 <header>
     <nav class="navbar navbar-light bg-light p-3">
         <a class="navbar brand" href="/">Библиотека</a>
-        {% if current_user.is_authenticated %}
-        <a class="btn btn-secondary" href="/user_profile">Профиль</a>
-        <!--<p>Пользователь: {{current_user.name}}</p>-->
-        <a class="btn btn-info" href="/logout">Выйти</a>
-        {% else %}
         <div>
+            {% if current_user.is_authenticated %}
+            <a class="btn btn-secondary" href="/user_profile">Профиль</a>
+            <!--<p>Пользователь: {{current_user.name}}</p>-->
+            <a class="btn btn-info" href="/logout">Выйти</a>
+            {% else %}
             <a class="btn btn-primary" href="/register">Зарегистрироваться</a>
             <a class="btn btn-success" href="/login">Войти</a>
         </div>
