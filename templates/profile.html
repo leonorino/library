@@ -1,7 +1,26 @@
 {% extends "base.html" %}
 
 {% block content %}
-<p>Пользователь <strong>{{user.name}}</strong></p>
+<div class="p-2 mt-2 bg-primary d-flex justify-content-start rounded text-white stats">
+    <div>
+        <img src="/static/user.png" class="rounded" width="155">
+    </div>
+    <div>
+        <h4>{{user.name}}</h4>
+        <div>
+            <span style="font-size: 15px; color: #A1AAB9">Добавлено книг в библиотеку:</span>
+            <span style="font-weight: 500">{{user.added_books|length}}</span>
+        </div>
+        <div>
+            <span style="font-size: 15px; color: #A1AAB9">Скачано книг:</span>
+            <span style="font-weight: 500">{{user.downloaded_books|length}}</span>
+        </div>
+        <div>
+            <span style="font-size: 15px; color: #A1AAB9">Отзывов оставлено:</span>
+            <span style="font-weight: 500">{{user.reviews|length}}</span>
+        </div>
+    </div>
+</div>
 {% set books = [user.added_books, user.downloaded_books] %}
 {% for book_list in books %}
 {% if book_list == user.added_books %}
@@ -17,7 +36,7 @@
         <p><strong>Описание:</strong> {{book.description}}</p>
         <p><strong>Автор:</strong> {{book.author.name}}</p>
         <p><strong>Жанр:</strong> {{book.genre.name}}</p>
-        <p>Книга добавлена (дата)</p>
+        <p>Книга добавлена {{book.date_added.strftime("%d.%m.%Y в %H:%M")}</p>
         <p><strong>Количество загрузок:</strong> {{book.downloads_count}}</p>
         <a class="btn btn-primary me-1" href="/books/id={{book.id}}/get/epub">Скачать EPUB</a>
         <a class="btn btn-primary mx-1" href="/books/id={{book.id}}/get/fb2">Скачать FB2</a>

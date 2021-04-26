@@ -223,9 +223,9 @@ def show_reviews(book_id):
     return render_template("review_list.html", book=book)
 
 
-@app.route("/users/id=<int:user_id>")
-def show_user_profile(user_id):
-    user = load_user(user_id)
+@app.route("/user_profile")
+def show_user_profile():
+    user = current_user
     return render_template("profile.html", user=user)
 
 
