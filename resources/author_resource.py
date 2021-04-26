@@ -8,7 +8,7 @@ def abort_if_author_not_found(author_id):
     session = create_session()
     author = session.query(Author).get(author_id)
     if not author:
-        abort(404, "Такого автора не существует")
+        abort(404, message="Такого автора не существует")
 
 
 class AuthorResource(Resource):
