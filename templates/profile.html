@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+{% if current_user.is_authenticated %}
 <div class="p-2 mt-2 bg-primary d-flex justify-content-start rounded text-white stats">
     <div>
         <img src="/static/user.png" class="rounded" width="155">
@@ -36,7 +37,8 @@
         <p><strong>Описание:</strong> {{book.description}}</p>
         <p><strong>Автор:</strong> {{book.author.name}}</p>
         <p><strong>Жанр:</strong> {{book.genre.name}}</p>
-        <p>Книга добавлена {{book.date_added.strftime("%d.%m.%Y в %H:%M")}</p>
+        {% set datetime = book.date_added.strftime("%d.%m.%Y %H:%M")%}
+        <p>Книга добавлена {{datetime[0:10]}} в {{datetime[10:]}}</p>
         <p><strong>Количество загрузок:</strong> {{book.downloads_count}}</p>
         <a class="btn btn-primary me-1" href="/books/id={{book.id}}/get/epub">Скачать EPUB</a>
         <a class="btn btn-primary mx-1" href="/books/id={{book.id}}/get/fb2">Скачать FB2</a>
@@ -45,4 +47,7 @@
 </div>
 {% endfor %}
 {% endfor %}
+{% else %}
+<h3 align="center">Пожалуйста, авторизируйтесь, чтобы увидеть информацию о своём профиле</h3>
+{% endif %}
 {% endblock %}

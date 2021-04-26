@@ -1,40 +1,41 @@
 {% extends "base.html" %}
-
 {% block content %}
-    <div class="d-flex flex-row justify-content-evenly my-1">
-        <h2 align="center">Список книг</h2>
-        <form method="post" class="d-flex flex-row">
-            <select name="type">
-                <option value="title">Поиск по названию</option>
-                <option value="author">Поиск по автору</option>
-            </select>
-            <input type="text" name="search_query"/>
-            <button class="btn btn-primary" type="submit">Поиск</button>
-        </form>
+<div class="d-flex flex-row justify-content-evenly my-1">
+    <h2 align="center">Список книг</h2>
+    <form method="post" class="d-flex flex-row">
+        <select name="type">
+            <option value="title">Поиск по названию</option>
+            <option value="author">Поиск по автору</option>
+        </select>
+        <input type="text" name="search_query"/>
+        <button class="btn btn-primary" type="submit">Поиск</button>
+    </form>
+</div>
+{% if current_user.is_authenticated %}
+<div class="mb-1" style="text-align: center">
+    <a class="btn btn-success" href="/books/add">Добавить книгу</a>
+</div>
+{% else %}
+<p class="mb-1" align="center">Авторизуйтесь, чтобы добавить книгу</p>
+{% endif %}
+<div class="list-group">
+    {% for book in books %}
+    <div class="list-group-item d-flex flex-row justify-content-start">
+        <div class="me-1"><img class="cover" src="{{'/' + book.data_folder + '/cover'}}" alt="обложка"/></div>
+        <div>
+            <h5>{{book.title}}</h5>
+            <p><strong>Описание:</strong> {{book.description}}</p>
+            <p><strong>Автор:</strong> {{book.author.name}}</p>
+            <p><strong>Жанр:</strong> {{book.genre.name}}</p>
+            {% set datetime = book.date_added.strftime("%d.%m.%Y %H:%M")%}
+            <p>Книга добавлена пользователем <strong>{{book.user.name}}</strong> {{datetime[0:10]}} в {{datetime[10:]}}
+            </p>
+            <p><strong>Количество загрузок:</strong> {{book.downloads_count}}</p>
+            <a class="btn btn-primary me-1" href="/books/id={{book.id}}/get/epub">Скачать EPUB</a>
+            <a class="btn btn-primary mx-1" href="/books/id={{book.id}}/get/fb2">Скачать FB2</a>
+            <a class="btn btn-primary ms-1" href="/books/id={{book.id}}/reviews">Отзывы пользователей</a>
+        </div>
     </div>
-    {% if current_user.is_authenticated %}
-    <div class="mb-1" style="text-align: center">
-        <a class="btn btn-success" href="/books/add">Добавить книгу</a>
-    </div>
-    {% else %}
-    <p class="mb-1" align="center">Авторизуйтесь, чтобы добавить книгу</p>
-    {% endif %}
-    <div class="list-group">
-        {% for book in books %}
-            <div class="list-group-item d-flex flex-row justify-content-start">
-                <div class="me-1"><img class="cover" src="{{'/' + book.data_folder + '/cover'}}" alt="обложка"/></div>
-                <div>
-                    <h5>{{book.title}}</h5>
-                    <p><strong>Описание:</strong> {{book.description}}</p>
-                    <p><strong>Автор:</strong> {{book.author.name}}</p>
-                    <p><strong>Жанр:</strong> {{book.genre.name}}</p>
-                    <p>Книга добавлена пользователем <strong>{{book.user.name}}</strong> {{book.date_added.strftime("%d.%m.%Y в %H:%M")}}</p>
-                    <p><strong>Количество загрузок:</strong> {{book.downloads_count}}</p>
-                    <a class="btn btn-primary me-1" href="/books/id={{book.id}}/get/epub">Скачать EPUB</a>
-                    <a class="btn btn-primary mx-1" href="/books/id={{book.id}}/get/fb2">Скачать FB2</a>
-                    <a class="btn btn-primary ms-1" href="/books/id={{book.id}}/reviews">Отзывы пользователей</a>
-                </div>
-            </div>
-        {% endfor %}
-    </div>
+    {% endfor %}
+</div>
 {% endblock %}
