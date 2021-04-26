@@ -13,7 +13,8 @@ def abort_if_genre_not_found(genre_id):
 
 class GenreResource(Resource):
     def get(self, genre_id):
-        abort_if_genre_not_found()
+        abort_if_genre_not_found(genre_id)
         session = create_session()
         genre = session.query(Genre).get(genre_id)
-        genre_dict = genre.to_dict(rules="-books")
+        genre_dict = genre.to_dict(rules=("-books",))
+        return jsonify({'genre': genre_dict})

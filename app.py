@@ -248,6 +248,6 @@ if __name__ == "__main__":
     api.add_resource(BookResource, "/api/books/<int:book_id>")
     api.add_resource(BookListResource, "/api/books")
     api.add_resource(GenreResource, "/api/genre/<int:genre_id>")
-    api.add_resource(AuthorResource, "/api/genre/<int:author_id>")
+    api.add_resource(AuthorResource, "/api/author/<int:author_id>")
 
     app.run(host="localhost", port=8080, debug=True)

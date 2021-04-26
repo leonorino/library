@@ -4,7 +4,7 @@ from db_manager import create_session
 from models.author import Author
 
 
-def abort_if_not_found(author_id):
+def abort_if_author_not_found(author_id):
     session = create_session()
     author = session.query(Author).get(author_id)
     if not author:
@@ -16,5 +16,5 @@ class AuthorResource(Resource):
         abort_if_author_not_found(author_id)
         session = create_session()
         author = session.query(Author).get(author_id)
-        author_dict = user.to_dict(rules="-books")
+        author_dict = author.to_dict(rules=("-books",))
         return jsonify({'author': author_dict})

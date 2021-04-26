@@ -1,6 +1,6 @@
 from flask_restful import reqparse, abort, Api, Resource
 from flask import jsonify
-from db_models import create_session
+from db_manager import create_session
 from models.book import Book
 
 
@@ -16,7 +16,8 @@ class BookResource(Resource):
         abort_if_book_not_found(book_id)
         session = create_session()
         book = session.query(Book).get(book_id)
-        book_dict = book.to_dict(rules="-reviews,-author,-user,-genre")
+        book_dict = book.to_dict(rules=("-reviews", "-author",
+                                        "-users", "-user", "-genre"))
         return jsonify({'book': book_dict})
 
 
@@ -25,6 +26,7 @@ class BookListResource(Resource):
         session = create_session()
         books = session.query(Book).all()
         return jsonify({
-            'books': [book.to_dict(rules="-reviews,-author,-user,-genre")
+            'books': [book.to_dict(rules=("-reviews", "-author",
+                                          "-users", "-user", "-genre"))
                       for book in books]
         })
