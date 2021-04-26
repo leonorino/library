@@ -246,8 +246,15 @@ if __name__ == "__main__":
 
     api = Api(app)
     from resources.user_resource import UserResource, UserListResource
+    from resources.book_resource import BookResource, BookListResource
+    from resources.genre_resource import GenreResource
+    from resources.author_resource import AuthorResource
 
     api.add_resource(UserResource, '/api/users/<int:user_id>')
     api.add_resource(UserListResource, '/api/users')
+    api.add_resource(BookResource, "/api/books/<int:book_id>")
+    api.add_resource(BookListResource, "/api/books")
+    api.add_resource(GenreResource, "/api/genre/<int:genre_id>")
+    api.add_resource(AuthorResource, "/api/genre/<int:author_id>")
 
     app.run(host="localhost", port=8080, debug=True)
