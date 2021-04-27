@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import PasswordField, BooleanField, SubmitField, StringField
-from wtforms.validators import DataRequired, ValidationError
+from wtforms.validators import DataRequired, StopValidation
 from models.user import User
 
 
@@ -10,7 +10,7 @@ def check_username(form, user_name):
     session = db_manager.create_session()
     existing_user = session.query(User).filter(User.name == user_name.data.strip()).first()
     if not existing_user:
-        return ValidationError("Пользователя с таким именем не существует")
+        raise StopValidation("Пользователя с таким именем не существует")
 
 
 class LoginForm(FlaskForm):

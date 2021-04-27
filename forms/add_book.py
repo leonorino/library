@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import SubmitField, StringField, IntegerField, FileField
 from wtforms import SelectField
-from wtforms.validators import DataRequired, ValidationError
+from wtforms.validators import DataRequired, StopValidation
 
 from models.book import Book
 
@@ -14,7 +14,7 @@ def validate_book_name(form, book_title):
         .first()
 
     if book:
-        raise ValidationError("Книга с таким названием уже существует")
+        raise StopValidation("Книга с таким названием уже существует")
 
 
 class AddBookForm(FlaskForm):

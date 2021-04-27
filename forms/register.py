@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import SubmitField, StringField, PasswordField
 from wtforms.fields.html5 import EmailField
-from wtforms.validators import DataRequired, ValidationError
+from wtforms.validators import DataRequired, StopValidation
 from models.user import User
 
 
@@ -12,13 +12,13 @@ def check_username(form, user_name):
     user = session.query(User).filter(User.name == user_name.data.strip()) \
         .first()
     if user:
-        return ValidationError("Пользователь с таким именем уже существует")
+        raise StopValidation("Пользователь с таким именем уже существует")
 
 
 def check_password(form, password):
     repeated_password = form.password_again.data
     if password.data != repeated_password:
-        raise ValidationError("Пароли не совпадают")
+        raise StopValidation("Пароли не совпадают")
 
 
 class RegisterForm(FlaskForm):
