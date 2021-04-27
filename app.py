@@ -1,6 +1,6 @@
 import os
 import uuid
-from flask import Flask, render_template, redirect, request, url_for, send_file
+from flask import Flask, render_template, redirect, request, url_for, send_file, make_response, jsonify
 from flask_login import LoginManager, login_user, login_required, logout_user
 from flask_login import current_user
 
@@ -18,6 +18,11 @@ from flask_restful import Api
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "secret_key"
 app.config['JSON_AS_ASCII'] = False
+
+
+@app.errorhandler(404)
+def not_found(error):
+    return make_response(jsonify({'error': 'Not found'}), 404)
 
 
 @app.route("/")
@@ -71,7 +76,7 @@ def register():
 
         session.add(new_user)
         session.commit()
-
+        login_user(new_user, remember=False)
         return redirect("/")
     return render_template("register.html", title="Регистрация", form=form)
 
@@ -154,7 +159,7 @@ def show_book_add_page():
         new_book = Book(
             title=form.title.data,
             description=form.description.data,
-            added_by=1
+            added_by=current_user.id
         )
 
         existing_author = session.query(Author) \

@@ -1,7 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
+{% if not book.reviews %}
+<h2 align="center">Отзывов пока нет</h2>
+{% else %}
 <h2 align="center">Список отзывов</h2>
+{% endif %}
 {% if current_user.is_authenticated %}
 <div class="mb-1" style="text-align: center">
     <a class="btn btn-success" href="/books/id={{book.id}}/reviews/add">Добавить отзыв</a>
@@ -19,8 +23,8 @@
     </div>
     {% endfor %}
 
-    {% if not book.reviews %}
+    <!--{% if not book.reviews %}
     <h4 align="center">Отзывов нет</h4>
-    {% endif %}
+    {% endif %}-->
 </div>
 {% endblock %}
