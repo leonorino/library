@@ -268,4 +268,4 @@ if __name__ == "__main__":
     api.add_resource(GenreListResource, "/api/genres")
     api.add_resource(AuthorResource, "/api/authors/<int:author_id>")
     api.add_resource(AuthorListResource, "/api/authors")
-    app.run(host="localhost", port=8080, debug=True)
+    app.run()
