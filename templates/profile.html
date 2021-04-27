@@ -12,10 +12,10 @@
             <span style="font-size: 15px; color: #A1AAB9">Добавлено книг в библиотеку:</span>
             <span style="font-weight: 500">{{user.added_books|length}}</span>
         </div>
-        <div>
+        <!--<div>
             <span style="font-size: 15px; color: #A1AAB9">Скачано книг:</span>
             <span style="font-weight: 500">{{user.downloaded_books|length}}</span>
-        </div>
+        </div>-->
         <div>
             <span style="font-size: 15px; color: #A1AAB9">Отзывов оставлено:</span>
             <span style="font-weight: 500">{{user.reviews|length}}</span>
@@ -27,7 +27,8 @@
 {% if loop.index == 1 %}
 <p>Добавленные книги</p>
 {% else %}
-<p>Скачанные книги</p>
+<!--<p>Скачанные книги</p>-->
+<p></p>
 {%endif%}
 {% for book in book_list%}
 <div class="list-group-item d-flex flex-row justify-content-start">
