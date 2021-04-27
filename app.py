@@ -154,56 +154,59 @@ def show_book_add_page():
     form = AddBookForm()
 
     if form.validate_on_submit():
-        session = db_manager.create_session()
+        try:
+            session = db_manager.create_session()
 
-        new_book = Book(
-            title=form.title.data,
-            description=form.description.data,
-            added_by=current_user.id
-        )
+            new_book = Book(
+                title=form.title.data,
+                description=form.description.data,
+                added_by=current_user.id
+            )
 
-        existing_author = session.query(Author) \
-            .filter(Author.name == form.author.data.strip()).first()
-        if existing_author:
-            new_book.author = existing_author.id
-        else:
-            new_author = Author(name=form.author.data.strip())
-            session.add(new_author)
-            session.flush()
-            new_book.author = new_author
+            existing_author = session.query(Author) \
+                .filter(Author.name == form.author.data.strip()).first()
+            if existing_author:
+                new_book.author = existing_author.id
+            else:
+                new_author = Author(name=form.author.data.strip())
+                session.add(new_author)
+                session.flush()
+                new_book.author = new_author
 
-        existing_genre = session.query(Genre) \
-            .filter(Genre.name == form.genre.data.strip()).first()
-        if existing_genre:
-            new_book.genre = existing_genre.id
-        else:
-            new_genre = Genre(name=form.genre.data.strip())
-            session.add(new_genre)
-            session.flush()
-            new_book.genre = new_genre
+            existing_genre = session.query(Genre) \
+                .filter(Genre.name == form.genre.data.strip()).first()
+            if existing_genre:
+                new_book.genre = existing_genre.id
+            else:
+                new_genre = Genre(name=form.genre.data.strip())
+                session.add(new_genre)
+                session.flush()
+                new_book.genre = new_genre
 
-        directory_names = os.listdir("static/books")
-        new_directory_name = str(uuid.uuid4())
-        while new_directory_name in directory_names:
+            directory_names = os.listdir("static/books")
             new_directory_name = str(uuid.uuid4())
+            while new_directory_name in directory_names:
+                new_directory_name = str(uuid.uuid4())
 
-        os.mkdir(os.path.join("static/books", new_directory_name))
-        new_book.data_folder = os.path.join("static/books",
-                                            new_directory_name).replace("\\", "/")
+            os.mkdir(os.path.join("static/books", new_directory_name))
+            new_book.data_folder = os.path.join("static/books",
+                                                new_directory_name).replace("\\", "/")
 
-        content_directory = os.path.join("static/books", new_directory_name)
+            content_directory = os.path.join("static/books", new_directory_name)
 
-        request.files['cover'].save(os.path.join(
-            content_directory, "cover").replace("\\", "/"))
-        request.files['fb2_file'].save(os.path.join(
-            content_directory, "book.fb2").replace("\\", "/"))
-        request.files['epub_file'].save(os.path.join(
-            content_directory, "book.epub").replace("\\", "/"))
+            request.files['cover'].save(os.path.join(
+                content_directory, "cover").replace("\\", "/"))
+            request.files['fb2_file'].save(os.path.join(
+                content_directory, "book.fb2").replace("\\", "/"))
+            request.files['epub_file'].save(os.path.join(
+                content_directory, "book.epub").replace("\\", "/"))
 
-        session.add(new_book)
-        session.commit()
+            session.add(new_book)
+            session.commit()
 
-        return redirect("/")
+            return redirect("/")
+        except Exception:
+            return render_template('error.html')
 
     return render_template("add_book.html", title="Добавление книги", form=form)
 

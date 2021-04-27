@@ -6,7 +6,7 @@
     <h3 align="center">Добавление отзыва о книге "{{book.title}}"</h3>
     <div class="form-group">
         {{form.rating.label}}</br>
-        {{form.rating(class="form-control", type="text", placeholder="Введите оценку от 1 до 10")}}
+        {{form.rating(class="form-control", type="text", placeholder="Введите оценку от 1 до 10(целое число)")}}
         {%for error in form.rating.errors%}
         <div class="alert alert-warning">
             {{error}}

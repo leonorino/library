@@ -19,6 +19,16 @@
         {% set datetime = review.date_added.strftime("%d.%m.%Y %H:%M")%}
         <p>Отзыв пользователя <strong>{{review.user.name}}</strong> от <strong>{{datetime[0:10]}} в
             {{datetime[10:]}}</strong></p>
+        {% if review.rating >= 7 %}
+        <p>Оценка: <span style="color: lime; font-weight: bold">{{review.rating}}/10</span></p>
+        {% elif review.rating >= 5 %}
+        <p>Оценка: <span style="color: springgreen; font-weight: bold">{{review.rating}}/10</span></p>
+        {% elif review.rating >= 3 %}
+        <p>Оценка: <span style="color: orange; font-weight: bold">{{review.rating}}/10</span></p>
+        {% else %}
+        <p>Оценка: <span style="color: red; font-weight: bold">{{review.rating}}/10</span></p>
+
+        {% endif %}
         <p>{{review.content}}</p>
     </div>
     {% endfor %}
